@@ -1,0 +1,11 @@
+# /etc/exports — hardened export for the compute subnet (Docker/K8s)
+#
+#  rw               : containers must read AND write
+#  sync             : server acknowledges only after physical persistence
+#                     (critical against ciphertext/metadata corruption)
+#  no_subtree_check : exporting a dedicated directory, not individual files
+#  all_squash       : map ALL client requests (incl. client root) to an
+#                     anonymous unprivileged UID -> privilege escalation
+#                     on the server yields nothing
+#  anonuid/anongid  : must match the in-container unprivileged user (1001)
+/srv/nfs/exports/cifrado 10.0.0.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1001)

@@ -1,0 +1,12 @@
+services:
+  baseline:
+    build: .
+    container_name: test_baseline
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:nosuid,size=5g
+    user: "1001:1001"
+    volumes:
+      - ./benchmark.sh:/app/benchmark.sh:ro
+    restart: unless-stopped

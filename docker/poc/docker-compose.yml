@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    container_name: poc-cifrado
+    read_only: true
+    user: "1001:1001"
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    devices:
+      - /dev/fuse:/dev/fuse
+    tmpfs:
+      - /tmp:noexec,nosuid,size=5g
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+    volumes:
+      - nfs_cifrado:/app/cifrado
+      - ./benchmark.sh:/app/benchmark.sh:ro
+    tty: true
+    stdin_open: true
+    restart: "no"
+
+volumes:
+  nfs_cifrado:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=${NFS_SERVER},rw,nfsvers=4,wsize=1048576,rsize=1048576"
+      device: ":${NFS_EXPORT}"

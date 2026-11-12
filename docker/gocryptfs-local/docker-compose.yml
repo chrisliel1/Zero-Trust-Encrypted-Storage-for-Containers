@@ -1,0 +1,18 @@
+services:
+  crypto-tester:
+    build: .
+    container_name: test_gocryptfs_local
+    read_only: true
+    security_opt:
+      - apparmor:unconfined
+    user: "1001:1001"
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse 
+    tmpfs:
+      - /tmp:noexec,nosuid,size=5g 
+    volumes:
+      - cifrado_go:/app/cifrado
+      - ./benchmark.sh:/app/benchmark.sh:ro 
+    restart: unless-stopped
